@@ -1,17 +1,19 @@
 import pytest
 import adventure
-import random
+import io
+import sys
 from unittest.mock import patch
 from io import StringIO
-import sys
 
+# --- Week 4 Specific Tests ---
 
-# --- Test monster_attack function ---
-def test_monster_attack_normal_hit(monkeypatch, capsys):
-    """Test monster_attack function with a normal hit."""
-    monkeypatch.setattr(random, 'random', lambda: 0.6) # Mock random.random to return >= 0.5 (normal hit)
-    initial_player_health = 50
-    updated_player_health = adventure.monster_attack(initial_player_health)
+# Test display_inventory function - with items
+def test_display_inventory_with_items(capsys):
+    inventory = ["rope", "grappling hook", "potion"]
+    adventure.display_inventory(inventory)
     captured = capsys.readouterr()
-    assert "The monster hits you for 10 damage!" in captured.out
-    assert updated_player_health == 40 # Player health reduced by 10
+    output_lines = captured.out.strip().split('\n') # Split output into lines
+    assert "Your inventory:" in output_lines[0]
+    assert "1. rope" in output_lines[1]
+    assert "2. grappling hook" in output_lines[2]
+    assert "3. potion" in output_lines[3]
